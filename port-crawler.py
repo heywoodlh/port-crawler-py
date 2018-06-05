@@ -126,7 +126,7 @@ def web_devicify(host, dest_dir):
         response = requests.get(host)
         if response.status_code == 200:
             for device in device_list:
-                device_file = dest_dir + device + '.txt'
+                device_file = dest_dir + '/' + device + '.txt'
                 mydevices = device_list[device]
                 if type(mydevices) is list:
                     for item in device_list[device]:
