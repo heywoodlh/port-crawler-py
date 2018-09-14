@@ -32,6 +32,7 @@ sudo systemctl start elasticsearch.service
 ### Kibana install
 
 sudo apt-get install kibana -y
+sudo sed -i 's/#server.port: 5601/server.port: 5601/g' /etc/kibana/kibana.yml
 sudo sed -i 's/#server.host: "localhost"/server.host: '"$IP_OR_HOSTNAME"'/g' /etc/kibana/kibana.yml
 sudo systemctl enable kibana.service
 sudo systemctl restart kibana.service
