@@ -68,7 +68,7 @@ All of the `*_bin` arguments can be bypassed if you used the `install.sh` script
 Example command:
 
 ```
-sudo /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.1.10 192.168.1.50 --ports 80 443 --index_prefix portscans -s --devicify
+sudo /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001  --index_prefix portscans -s --devicify
 ```
 
 
