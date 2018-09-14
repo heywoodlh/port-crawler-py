@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ### Edit these variables
-IP_OR_HOSTNAME=''
+IP_OR_HOSTNAME='0.0.0.0'
 
 
 ### Don't edit below unless you know what you are doing
@@ -32,7 +32,7 @@ sudo systemctl start elasticsearch.service
 ### Kibana install
 
 sudo apt-get install kibana -y
-sudo sed -i 's/#server.host: "localhost"/server.host: "'"$IP_OR_HOSTNAME"'"/g' /etc/kibana/kibana.yml
+sudo sed -i 's/#server.host: "localhost"/server.host: '"$IP_OR_HOSTNAME"'/g' /etc/kibana/kibana.yml
 sudo systemctl enable kibana.service
 sudo systemctl restart kibana.service
 
