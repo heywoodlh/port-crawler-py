@@ -70,14 +70,21 @@ optional arguments:
 All of the `*_bin` arguments can be bypassed if you used the `install.sh` script.
 
 
-Example command:
+Example command (change the IP addresses and the ports if you'd like):
 
 ```
 sudo /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001  --index_prefix portscans -s --devicify
 ```
 
 
-If you enable screenshots, the default location on the server that they will be stored at will be `/opt/Port-Crawler-Py/screenshots`. If you'd like to view the screenshots in a web browser, install a web server and configure it to use the screenshots directory. The `gallery.html` file will be placed in the screenshots directory allowing you to use that file to view all the screenshots on a nice html page rendered in a web server (I.E. http://myscanner.com/screenshots/gallery.html).
+Set the scan to repeat itself on a regular basis -- at 1:00 a.m. every day -- with a cronjob (`sudo crontab -e`), changing the IP addresses and ports as you'd like:
+
+```
+0 1 * * * /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001  --index_prefix portscans -s --devicify
+```
+
+
+*Note: If you enable screenshots, the default location on the server that they will be stored at will be `/opt/Port-Crawler-Py/screenshots`. If you'd like to view the screenshots in a web browser, install a web server and configure it to use the screenshots directory. The `gallery.html` file will be placed in the screenshots directory allowing you to use that file to view all the screenshots on a nice html page rendered in a web server (I.E. http://myscanner.com/screenshots/gallery.html).*
 
 
 ## Configuring Kibana:
