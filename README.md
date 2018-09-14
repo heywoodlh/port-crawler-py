@@ -8,7 +8,7 @@ The `install.sh` script has been provided to simplify installing dependencies.
 sudo chown -R "$USER:$USER" /opt
 cd /opt
 git clone https://github.com/heywoodlh/Port-Crawler-Py
-cd Port-Crawler
+cd Port-Crawler-Py
 sudo ./install.sh
 ```
 
