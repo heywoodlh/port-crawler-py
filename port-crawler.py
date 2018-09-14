@@ -15,7 +15,7 @@ parser.add_argument('--masscan_bin', help='path to masscan', default='/usr/bin/m
 parser.add_argument('--masscan_rate', help='masscan rate', default='10000000')
 parser.add_argument('--masscan_args', help='additional masscan args', nargs='+')
 parser.add_argument('--jsonpyes_bin', help='path to jsonpyes', default='/usr/local/bin/jsonpyes')
-parser.add_argument('--chrome_bin', help='path to google-chrome', default='/usr/bin/google-chrome')
+parser.add_argument('--chrome_bin', help='path to google-chrome', default='/usr/bin/chromium-browser')
 parser.add_argument('--jq_bin', help='path to jq', default='/usr/bin/jq')
 parser.add_argument('--elasticsearch_host', help='elasticsearch host', default='http://localhost:9200', metavar='HOST')
 parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
