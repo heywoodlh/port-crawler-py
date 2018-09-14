@@ -55,7 +55,7 @@ def scanner(masscan, ip, ports, masscan_rate, jsonpyes, masscan_args):
         os.system(masscan + ' ' + ip + ' -p' + str(ports) + ' --rate ' + str(masscan_rate) + ' --banners -oJ ' + complete_file)
     os.system("sed '1d; $d' " + complete_file + " > " + date)
     os.system("sed 's/.$//' " + date + " > " + complete_file)
-    os.system("sed -i '/^$/d'" + complete_file)
+    os.system("sed -i '/^$/d' " + complete_file)
     try:
         os.remove(date)
     except FileNotFoundError:
