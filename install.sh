@@ -17,7 +17,7 @@ sudo apt-get install openjdk-8-jdk -y
 ### Elastic repository install
 
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" > /etc/apt/sources.list.d/elastic-6.x.list
 
 ### Elasticsearch install
 
@@ -34,7 +34,7 @@ sudo systemctl start elasticsearch.service
 sudo apt-get install kibana -y
 sudo sed -i 's/#server.host: "localhost"/server.host: "'"$IP_OR_HOSTNAME"'"/g' /etc/kibana/kibana.yml
 sudo systemctl enable kibana.service
-sudo systemctl start kibana.service
+sudo systemctl restart kibana.service
 
 
 
