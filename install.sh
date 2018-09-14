@@ -67,6 +67,7 @@ sudo apt-get install chromium-browser -y
 ### Install Python3
 
 sudo apt-get install python3 python3-pip -y
+sudo chown -R "$USER":"$USER" /opt/Port-Crawler-Py
 sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
 
 
