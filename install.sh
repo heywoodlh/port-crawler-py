@@ -22,7 +22,7 @@ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee 
 ### Elasticsearch install
 
 sudo apt-get update
-sudo apt-get install elasticsearch
+sudo apt-get install elasticsearch -y
 sudo sed -i 's/#cluster.name: my-application/cluster.name: port-crawler/g' /etc/elasticsearch/elasticsearch.yml
 sudo sed -i 's/#network.host: 192.168.0.1/network.host: 127.0.0.1/g' /etc/elasticsearch/elasticsearch.yml
 sudo systemctl enable elasticsearch.service
@@ -31,7 +31,7 @@ sudo systemctl start elasticsearch.service
 
 ### Kibana install
 
-sudo apt-get install kibana
+sudo apt-get install kibana -y
 sudo sed -i 's/#server.host: "localhost"/server.host: "'"$IP_OR_HOSTNAME"'"/g' /etc/kibana/kibana.yml
 sudo systemctl enable kibana.service
 sudo systemctl start kibana.service
@@ -40,7 +40,7 @@ sudo systemctl start kibana.service
 
 ### Masscan install
 
-sudo apt-get install git gcc make clang libpcap-dev
+sudo apt-get install git gcc make clang libpcap-dev -y
 sudo chown -R "$USER:$USER" /opt
 cd /opt
 git clone https://github.com/robertdavidgraham/masscan
@@ -51,22 +51,22 @@ sudo cp bin/masscan /usr/bin/
 
 ### Install Jsonpyes
 
-sudo apt-get install python-pip
+sudo apt-get install python-pip -y
 sudo pip install jsonpyes
 
 
 ### Install jq
 
-sudo apt-get install jq
+sudo apt-get install jq -y
 
 ### Install Chromium for screenshots
 
-sudo apt-get install chromium-browser
+sudo apt-get install chromium-browser -y
 
 
 ### Install Python3
 
-sudo apt-get install python3
+sudo apt-get install python3 -y
 
 
 cd "$PWD"
