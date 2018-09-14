@@ -64,5 +64,9 @@ sudo apt-get install jq
 sudo apt-get install chromium-browser
 
 
+### Install Python3
+
+sudo apt-get install python3
+
 
 cd "$PWD"
