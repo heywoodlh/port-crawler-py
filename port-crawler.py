@@ -22,8 +22,8 @@ parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
 parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+', required='True')
 parser.add_argument('-i', '--index_prefix', help='Prefix of index', required='True')
 parser.add_argument('-s', '--screenshot', help='take screenshots', action="store_true")
-parser.add_argument('--dir', help='screenshot dir', default='./screenshots', metavar='DIR')
-parser.add_argument('--blank_master', help='undesired png(s) to compare screenshots to', metavar='BLANK.PNG', default='./blank-master.png')
+parser.add_argument('--dir', help='screenshot dir', default='/opt/Port-Crawler-Py/screenshots', metavar='DIR')
+parser.add_argument('--blank_master', help='undesired png(s) to compare screenshots to', metavar='BLANK.PNG', default='opt/Port-Crawler-Py/blank-master.png')
 parser.add_argument('-g', '--gallery', help='add gallery.html to screenshots directory', metavar='GALLERY.HTML')
 parser.add_argument('--devicify', help='attempt to identify devices', action="store_true")
 parser.add_argument('--test', help='do not upload for testing', action="store_true")
@@ -55,6 +55,7 @@ def scanner(masscan, ip, ports, masscan_rate, jsonpyes, masscan_args):
         os.system(masscan + ' ' + ip + ' -p' + str(ports) + ' --rate ' + str(masscan_rate) + ' --banners -oJ ' + complete_file)
     os.system("sed '1d; $d' " + complete_file + " > " + date)
     os.system("sed 's/.$//' " + date + " > " + complete_file)
+    os.system("sed -i '/^$/d'" + complete_file)
     try:
         os.remove(date)
     except FileNotFoundError:
