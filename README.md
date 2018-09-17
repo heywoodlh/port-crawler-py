@@ -33,9 +33,8 @@ Help message:
 usage: port-crawler.py [-h] [--masscan_bin MASSCAN_BIN]
                        [--masscan_rate MASSCAN_RATE]
                        [--masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]]
-                       [--chrome_bin CHROME_BIN] [--jq_bin JQ_BIN] --ip IP
-                       [IP ...] -p PORTS [PORTS ...] [-i INDEX_PREFIX]
-                       [--test]
+                       [--chrome_bin CHROME_BIN] --ip IP [IP ...] -p PORTS
+                       [PORTS ...] [-i INDEX_PREFIX] [--test]
 
 Port crawling script
 
@@ -47,15 +46,13 @@ optional arguments:
                         masscan rate
   --masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]
                         additional masscan args
-  --chrome_bin CHROME_BIN
-                        path to google-chrome
-  --jq_bin JQ_BIN       path to jq
   --ip IP [IP ...]      IP(s) to scan
   -p PORTS [PORTS ...], --ports PORTS [PORTS ...]
                         Port(s) to scan
   -i INDEX_PREFIX, --index_prefix INDEX_PREFIX
                         Prefix of index
   --test                do not upload for testing
+
 ```
 
 

@@ -50,11 +50,6 @@ make
 sudo cp bin/masscan /usr/bin/
 
 
-### Install jq
-
-sudo apt-get install jq -y
-
-
 ### Install Python3
 
 sudo apt-get install python3 python3-pip -y

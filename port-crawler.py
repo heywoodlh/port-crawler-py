@@ -8,17 +8,11 @@ import shutil
 import requests
 from elasticsearch import Elasticsearch
 
-date = time.strftime("%Y-%m-%d_%H:%M")
-ext = '.json'
-complete_file = date + ext
-elasticsearch_host = Elasticsearch()
 
 parser = argparse.ArgumentParser(description="Port crawling script")
 parser.add_argument('--masscan_bin', help='path to masscan', default='/usr/bin/masscan')
 parser.add_argument('--masscan_rate', help='masscan rate', default='10000000')
 parser.add_argument('--masscan_args', help='additional masscan args', nargs='+')
-parser.add_argument('--chrome_bin', help='path to google-chrome', default='/usr/bin/chromium-browser')
-parser.add_argument('--jq_bin', help='path to jq', default='/usr/bin/jq')
 parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
 parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+', required='True')
 parser.add_argument('-i', '--index_prefix', help='Prefix of index', default='portscan')
@@ -57,6 +51,12 @@ def scanner(masscan, ip, ports, masscan_rate, masscan_args):
 
 
 def main():
+    global date
+    date = time.strftime("%Y-%m-%d_%H:%M")
+    ext = '.json'
+    global complete_file
+    complete_file = date + ext
+    elasticsearch_host = Elasticsearch()
     scanner(args.masscan_bin, args.ip, args.ports, args.masscan_rate, args.masscan_args)
     if not args.test:
         es_uploader(date, complete_file, elasticsearch_host, args.index_prefix)
