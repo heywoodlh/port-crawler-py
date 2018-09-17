@@ -28,10 +28,6 @@ parser.add_argument('--test', help='do not upload for testing', action="store_tr
 
 args = parser.parse_args()
 
-if args.devicify:
-    from devices import *
-    from bs4 import BeautifulSoup
-
 
 def es_uploader(date, complete_file, es, index_prefix):
     i=0
