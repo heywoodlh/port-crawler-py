@@ -54,10 +54,6 @@ sudo cp bin/masscan /usr/bin/
 
 sudo apt-get install jq -y
 
-### Install Chromium for screenshots
-
-sudo apt-get install chromium-browser -y
-
 
 ### Install Python3
 

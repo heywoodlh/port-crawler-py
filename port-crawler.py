@@ -24,11 +24,6 @@ parser.add_argument('--jq_bin', help='path to jq', default='/usr/bin/jq')
 parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
 parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+', required='True')
 parser.add_argument('-i', '--index_prefix', help='Prefix of index', default='portscan')
-parser.add_argument('-s', '--screenshot', help='take screenshots', action="store_true")
-parser.add_argument('--dir', help='screenshot dir', default='/opt/Port-Crawler-Py/screenshots', metavar='DIR')
-parser.add_argument('--blank_master', help='undesired png(s) to compare screenshots to', metavar='BLANK.PNG', default='opt/Port-Crawler-Py/blank-master.png')
-parser.add_argument('-g', '--gallery', help='add gallery.html to screenshots directory', metavar='GALLERY.HTML')
-parser.add_argument('--devicify', help='attempt to identify devices', action="store_true")
 parser.add_argument('--test', help='do not upload for testing', action="store_true")
 
 args = parser.parse_args()
@@ -96,76 +91,6 @@ def url_parser(ports, ip_addresses):
             url = 'http://' + ip + ':' + str(port)
         url_array.append(url)
     return url_array
- 
-
-def screenshot(chrome_bin, blank_master, complete_file, screenshots_dir):
-    scan_file = complete_file
-    ports = port_parser(scan_file, args.jq_bin)
-    ip_addresses = ip_parser(scan_file, args.jq_bin)
-    if not os.path.exists(screenshots_dir):
-        os.makedirs(screenshots_dir)
-    urls = url_parser(ports, ip_addresses)
-    count = 0
-    global web_urls
-    web_urls = []
-    for url in urls:
-        screenshot_file = ip_addresses[count] + '_' + port_array[count] + '.png'
-        screenshot_file = screenshots_dir + '/' + screenshot_file
-        if int(port_array[count]) in (web_ports):
-            web_urls.append(url)
-            if not os.path.isfile(screenshot_file):
-                print('Taking screenshot of ' + url)
-                os.system('timeout 5 ' + chrome_bin + ' --headless --no-sandbox --disable-gpu --screenshot=' + screenshot_file + ' --ignore-certificate-errors ' + url)
-                os.system('[ "$( compare -metric rmse ' + screenshot_file + ' ' + blank_master + ' null: 2>&1 )" = "0 (0)" ] && rm ' + screenshot_file)
-        count += 1
-        
-
-def cp_gallery(gallery, screenshots_dir):
-    new_gallery = screenshots_dir + '/gallery.html'
-    if not os.path.isfile(new_gallery):
-        shutil.copyfile(gallery, new_gallery)
-    
-
-def web_devicify(host, dest_dir):
-    ip = host
-    try:
-        response = requests.get(host)
-        if response.status_code == 200:
-            for device in device_list:
-                device_file = dest_dir + '/' + device + '.txt'
-                mydevices = device_list[device]
-                if type(mydevices) is list:
-                    for item in device_list[device]:
-                        if str(item) in str(response.text):
-                            print(ip + ' identified as ' + str(device_list[device]))
-                            try:
-                                open(device_file, 'r')
-                            except IOError:
-                                open(device_file, 'w')
-                            if ip not in open(device_file).read():
-                                with open(device_file, "a") as myfile:
-                                    myfile.write(ip)
-                else:
-                    if str(device_list[device]) in str(response.text):
-                        try:
-                            open(device_file, 'r')
-                        except IOError:
-                            open(device_file, 'w')
-                        if ip not in open(device_file).read():
-                            with open(device_file, "a") as myfile:
-                                myfile.write(ip)
-    except requests.exceptions.SSLError:
-        pass
-
-
-def devicify(web_urls, screenshot_dir):
-    for url in web_urls:
-        web_dest = screenshot_dir + '/web'
-        if not os.path.isdir(screenshot_dir):
-            os.mkdir(screenshot_dir)
-        if not os.path.isdir(web_dest):
-            os.mkdir(web_dest)
-        web_devicify(url, web_dest)
 
 
 def main():
@@ -179,10 +104,6 @@ def main():
             os.remove(complete_file)
         except FileNotFoundError:
             pass
-    if args.gallery:
-        cp_gallery(args.gallery, args.dir)
-    if args.devicify:
-        devicify(web_urls, args.dir)
 
 
 if __name__ == '__main__':
