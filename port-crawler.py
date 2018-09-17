@@ -10,8 +10,7 @@ from elasticsearch import Elasticsearch
 
 
 parser = argparse.ArgumentParser(description="Port crawling script")
-parser.add_argument('--masscan_bin', help='path to masscan', default='/usr/bin/masscan')
-parser.add_argument('--masscan_rate', help='masscan rate', default='10000000')
+parser.add_argument('--masscan_rate', help='masscan rate', default='1000')
 parser.add_argument('--masscan_args', help='additional masscan args', nargs='+')
 parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
 parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+', required='True')
@@ -27,23 +26,27 @@ def es_uploader(date, complete_file, es, index_prefix):
     index_name = index_prefix + date
     with open(complete_file) as f:
         for line in f:
-            es.index(index=index_name, doc_type='scan', id=i, body=line)
+            line = line.rstrip('\n')
+            if line == '[' or line == ',' or line == ']':
+                pass
+            else:
+                es.index(index=index_name, doc_type='scan', id=i, body=line)
             i=i+1
     f.closed
 
 
-def scanner(masscan, ip, ports, masscan_rate, masscan_args):
-    ip = ' '.join(ip)
+def scanner(ip, ports, masscan_rate, masscan_args):
+    ip = ','.join(ip)
     ports = ','.join(ports)
     if masscan_args:
         masscan_args = ' '.join(masscan_args)
-        os.system(masscan + ' ' + ip + ' -p' + str(ports) + ' --rate ' + str(masscan_rate) + ' --banners -oJ ' + complete_file + ' ' + masscan_args)
+        subprocess.run(['masscan', str(ip),'-p', str(ports), '--rate', str(masscan_rate), '--banners', '-oJ', complete_file, masscan_args])
     else:
-        os.system(masscan + ' ' + ip + ' -p' + str(ports) + ' --rate ' + str(masscan_rate) + ' --banners -oJ ' + complete_file)
-    os.system("sed '1d; $d' " + complete_file + " > " + date)
-    os.system("sed 's/.$//' " + date + " > " + complete_file)
-    os.system("sed -i '/^$/d' " + complete_file)
-    os.system("sed -i 's/$/ }/' " + complete_file) 
+        subprocess.run(['masscan', str(ip),'-p', str(ports), '--rate', str(masscan_rate), '--banners', '-oJ', complete_file])
+    #subprocess.run(['sed', '''1d; $d''', str(complete_file), '>', str(date)])
+    #subprocess.run(['sed', '''s/.$//''', str(date), '>', str(complete_file)])
+    #subprocess.run(['sed', '-i', '''/^$/d''', str(complete_file)])
+    #subprocess.run(['sed', '-i', '''s/$/ }/''', str(complete_file)]) 
     try:
         os.remove(date)
     except FileNotFoundError:
@@ -57,7 +60,7 @@ def main():
     global complete_file
     complete_file = date + ext
     elasticsearch_host = Elasticsearch()
-    scanner(args.masscan_bin, args.ip, args.ports, args.masscan_rate, args.masscan_args)
+    scanner(args.ip, args.ports, args.masscan_rate, args.masscan_args)
     if not args.test:
         es_uploader(date, complete_file, elasticsearch_host, args.index_prefix)
     if not args.test:

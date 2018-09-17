@@ -4,9 +4,16 @@
 IP_OR_HOSTNAME='0.0.0.0'
 
 
+
 ### Don't edit below unless you know what you are doing
 
 PWD="$(pwd)"
+sudo mkdir -p /opt/
+sudo chown -R "$USER:$USER" /opt
+git clone https://github.com/heywoodlh/Port-Crawler-Py
+cd Port-Crawler-Py
+
+
 
 ### Install Java
 
@@ -56,5 +63,8 @@ sudo apt-get install python3 python3-pip -y
 sudo chown -R "$USER":"$USER" /opt/Port-Crawler-Py
 sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
 
+
+### Set default mapping for portscans to date
+curl -H 'Content-Type: application/json' -XPUT 'localhost:9200/_template/**templatename**' -d '{"template": "portscans*", "mappings": {"scan": {"properties":{"timestamp": {"type" : "date", "format" : "epoch_second"} } } } }'
 
 cd "$PWD"

@@ -6,22 +6,14 @@
 
 ## Quick Installation on Ubuntu:
 
-### Run the install.sh script:
+### Run the install.sh script automatically:
 
 The `install.sh` script has been provided to simplify installing dependencies.
 
-```
-sudo chown -R "$USER:$USER" /opt
-cd /opt
-git clone https://github.com/heywoodlh/Port-Crawler-Py
-cd Port-Crawler-Py
-```
+`curl https://raw.githubusercontent.com/heywoodlh/Port-Crawler-Py/master/install.sh | sudo bash`
 
-Edit the first variable in `install.sh` `IP_OR_HOSTNAME` to equal the IP address or hostname that Kibana will be served on.
+*Note: Please make sure that before running this script that you read the install script to make sure it doesn't do anything nefarious or that it won't impact your current system negatively. You solely are responsible for securityand well-being of your device. If you are not sure, refer to the manual installation section.*
 
-```
-sudo ./install.sh
-```
 
 
 ## Running port-crawler.py
@@ -30,18 +22,15 @@ Help message:
 
 
 ```
-usage: port-crawler.py [-h] [--masscan_bin MASSCAN_BIN]
-                       [--masscan_rate MASSCAN_RATE]
-                       [--masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]]
-                       [--chrome_bin CHROME_BIN] --ip IP [IP ...] -p PORTS
-                       [PORTS ...] [-i INDEX_PREFIX] [--test]
+usage: port-crawler.py [-h] [--masscan_rate MASSCAN_RATE]
+                       [--masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]] --ip
+                       IP [IP ...] -p PORTS [PORTS ...] [-i INDEX_PREFIX]
+                       [--test]
 
 Port crawling script
 
 optional arguments:
   -h, --help            show this help message and exit
-  --masscan_bin MASSCAN_BIN
-                        path to masscan
   --masscan_rate MASSCAN_RATE
                         masscan rate
   --masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]
@@ -73,14 +62,6 @@ Set the scan to repeat itself on a regular basis -- at 1:00 a.m. every day -- wi
 ```
 
 
-### Map the timestamp field to a date (in order for the daily statistics to be visualized): 
-
-`curl -H 'Content-Type: application/json' -XPUT 'localhost:9200/_template/**templatename**' -d '{"template": "portscans*", "mappings": {"scan": {"properties":{"timestamp": {"type" : "date", "format" : "epoch_second"} } } } }'`
-
-
-*Note: running the above command to map the 'timestamp' field to a date will result in conflicts of fields. In order to resolve this, you will have to delete any scans that ran prior to running the command.
-
-
 ## Configuring Kibana:
 
 ### Access Kibana:
@@ -102,3 +83,77 @@ If you used an index prefix of 'portscans' in `port-crawler.py` (or didn't set a
 In this repository is a copy of a default Kibana dashboard called `kibana-export.json` and visualizations that can be used to visualize the results of `port-crawler.py`'s `masscan` results.
 
 In order to import it go to Management > Saved Objects > Import. Download `kibana-export.json` to the machine that you are accessing the Kibana interface from and select `kibana-export.json` to import the dashboard and visualizations.
+
+
+
+## Install Elasticsearch, Masscan, Kibana, Port-Crawler-Py and dependencies manually on Ubuntu:
+
+### Install Java:
+
+```
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk -y
+```
+
+
+### Elastic repository install:
+
+```
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" > /etc/apt/sources.list.d/elastic-6.x.list
+```
+
+
+### Elasticsearch install:
+
+```
+sudo apt-get update
+sudo apt-get install elasticsearch -y
+sudo sed -i 's/#cluster.name: my-application/cluster.name: port-crawler/g' /etc/elasticsearch/elasticsearch.yml
+sudo sed -i 's/#network.host: 192.168.0.1/network.host: 127.0.0.1/g' /etc/elasticsearch/elasticsearch.yml
+sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
+```
+
+
+### Kibana install:
+
+```
+IP_OR_HOSTNAME='0.0.0.0' ## << Change this to equal the IP/hostname Kibana will be served on
+sudo apt-get install kibana -y
+sudo sed -i 's/#server.port: 5601/server.port: 5601/g' /etc/kibana/kibana.yml
+sudo sed -i 's/#server.host: "localhost"/server.host: '"$IP_OR_HOSTNAME"'/g' /etc/kibana/kibana.yml
+sudo systemctl enable kibana.service
+sudo systemctl restart kibana.service
+```
+
+
+### Masscan install:
+
+```
+sudo apt-get install git gcc make clang libpcap-dev -y
+sudo chown -R "$USER:$USER" /opt
+cd /opt
+git clone https://github.com/robertdavidgraham/masscan
+cd masscan
+make
+sudo cp bin/masscan /usr/bin/
+```
+
+
+### Install Python3:
+
+```
+sudo apt-get install python3 python3-pip -y
+```
+
+
+### Install Port-Crawler-Py:
+
+```
+sudo chown -R "$USER":"$USER" /opt/
+cd /opt/
+git clone https://github.com/heywoodlh/Port-Crawler-Py
+cd Port-Crawler-Py/
+sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
+```
