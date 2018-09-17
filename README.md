@@ -30,13 +30,11 @@ Help message:
 
 
 ```
-❯ ./port-crawler.py --help
 usage: port-crawler.py [-h] [--masscan_bin MASSCAN_BIN]
                        [--masscan_rate MASSCAN_RATE]
                        [--masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]]
-                       [--jsonpyes_bin JSONPYES_BIN] [--chrome_bin CHROME_BIN]
-                       [--jq_bin JQ_BIN] [--elasticsearch_host HOST] --ip IP
-                       [IP ...] -p PORTS [PORTS ...] -i INDEX_PREFIX [-s]
+                       [--chrome_bin CHROME_BIN] [--jq_bin JQ_BIN] --ip IP
+                       [IP ...] -p PORTS [PORTS ...] [-i INDEX_PREFIX] [-s]
                        [--dir DIR] [--blank_master BLANK.PNG]
                        [-g GALLERY.HTML] [--devicify] [--test]
 
@@ -50,13 +48,9 @@ optional arguments:
                         masscan rate
   --masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]
                         additional masscan args
-  --jsonpyes_bin JSONPYES_BIN
-                        path to jsonpyes
   --chrome_bin CHROME_BIN
                         path to google-chrome
   --jq_bin JQ_BIN       path to jq
-  --elasticsearch_host HOST
-                        elasticsearch host
   --ip IP [IP ...]      IP(s) to scan
   -p PORTS [PORTS ...], --ports PORTS [PORTS ...]
                         Port(s) to scan

@@ -6,18 +6,18 @@ import time
 import subprocess
 import shutil
 import requests
+from elasticsearch import Elasticsearch
 
-web_ports = 80, 81, 8080
+web_ports = 80, 81, 443, 8080
 
+elasticsearch_host = Elasticsearch()
 
 parser = argparse.ArgumentParser(description="Port crawling script")
 parser.add_argument('--masscan_bin', help='path to masscan', default='/usr/bin/masscan')
 parser.add_argument('--masscan_rate', help='masscan rate', default='10000000')
 parser.add_argument('--masscan_args', help='additional masscan args', nargs='+')
-parser.add_argument('--jsonpyes_bin', help='path to jsonpyes', default='/usr/local/bin/jsonpyes')
 parser.add_argument('--chrome_bin', help='path to google-chrome', default='/usr/bin/chromium-browser')
 parser.add_argument('--jq_bin', help='path to jq', default='/usr/bin/jq')
-parser.add_argument('--elasticsearch_host', help='elasticsearch host', default='http://localhost:9200', metavar='HOST')
 parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
 parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+', required='True')
 parser.add_argument('-i', '--index_prefix', help='Prefix of index', default='portscan')
@@ -35,17 +35,18 @@ if args.devicify:
     from bs4 import BeautifulSoup
 
 
-date = time.strftime("%Y-%m-%d_%H:%M")
-ext = '.json'
-complete_file = date + ext
+def es_uploader(date, complete_file, es, index_prefix):
+    i=0
+    docs ={}
+    index_name = index_prefix + date
+    with open(complete_file) as f:
+        for line in f:
+            es.index(index=index_name, doc_type='scan', id=i, body=line)
+            i=i+1
+    f.closed
 
 
-
-def es_uploader(jsonpyes, elasticsearch, index_prefix):
-    os.system(jsonpyes + ' --data ' + complete_file + ' --bulk ' + elasticsearch + ' --import --index ' + index_prefix + date + ' --type scan ' + '--check --thread 8') 
-
-
-def scanner(masscan, ip, ports, masscan_rate, jsonpyes, masscan_args):
+def scanner(masscan, ip, ports, masscan_rate, masscan_args):
     ip = ' '.join(ip)
     ports = ','.join(ports)
     if masscan_args:
@@ -165,9 +166,12 @@ def devicify(web_urls, screenshot_dir):
 
 
 def main():
-    scanner(args.masscan_bin, args.ip, args.ports, args.masscan_rate, args.jsonpyes_bin, args.masscan_args)
+    date = time.strftime("%Y-%m-%d_%H:%M")
+    ext = '.json'
+    complete_file = date + ext
+    scanner(args.masscan_bin, args.ip, args.ports, args.masscan_rate, args.masscan_args)
     if not args.test:
-        es_uploader(args.jsonpyes_bin, args.elasticsearch_host, args.index_prefix)
+        es_uploader(date, complete_file, elasticsearch_host, args.index_prefix)
     if args.screenshot:
         screenshot(args.chrome_bin, args.blank_master, complete_file, args.dir)
     if not args.test:

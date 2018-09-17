@@ -50,12 +50,6 @@ make
 sudo cp bin/masscan /usr/bin/
 
 
-### Install Jsonpyes
-
-sudo apt-get install python-pip -y
-sudo pip install jsonpyes
-
-
 ### Install jq
 
 sudo apt-get install jq -y
