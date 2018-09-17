@@ -10,6 +10,9 @@ from elasticsearch import Elasticsearch
 
 web_ports = 80, 81, 443, 8080
 
+date = time.strftime("%Y-%m-%d_%H:%M")
+ext = '.json'
+complete_file = date + ext
 elasticsearch_host = Elasticsearch()
 
 parser = argparse.ArgumentParser(description="Port crawling script")
@@ -166,9 +169,6 @@ def devicify(web_urls, screenshot_dir):
 
 
 def main():
-    date = time.strftime("%Y-%m-%d_%H:%M")
-    ext = '.json'
-    complete_file = date + ext
     scanner(args.masscan_bin, args.ip, args.ports, args.masscan_rate, args.masscan_args)
     if not args.test:
         es_uploader(date, complete_file, elasticsearch_host, args.index_prefix)
