@@ -93,8 +93,6 @@ def main():
     scanner(args.masscan_bin, args.ip, args.ports, args.masscan_rate, args.masscan_args)
     if not args.test:
         es_uploader(date, complete_file, elasticsearch_host, args.index_prefix)
-    if args.screenshot:
-        screenshot(args.chrome_bin, args.blank_master, complete_file, args.dir)
     if not args.test:
         try:
             os.remove(complete_file)
