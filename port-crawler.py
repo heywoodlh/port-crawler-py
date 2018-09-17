@@ -8,8 +8,6 @@ import shutil
 import requests
 from elasticsearch import Elasticsearch
 
-web_ports = 80, 81, 443, 8080
-
 date = time.strftime("%Y-%m-%d_%H:%M")
 ext = '.json'
 complete_file = date + ext
@@ -56,37 +54,6 @@ def scanner(masscan, ip, ports, masscan_rate, masscan_args):
         os.remove(date)
     except FileNotFoundError:
         pass
-
-    
-def port_parser(scan_file, jq_bin):
-    ports = subprocess.check_output("cat -s " + scan_file + " | " + jq_bin + " '.ports | map(.port)' | tr -d \[ | tr -d \] | sed 'N;/^\\n$/D;P;D;' | sed /^$/d", shell=True)
-    ports_string = ports.decode("utf-8")
-    ports = ports_string.split()
-    return ports
-
-
-def ip_parser(scan_file, jq_bin):
-    ip_addresses = subprocess.check_output('cat -s ' + scan_file + ' | ' + jq_bin + ' \'.ip\' | tr -d \\"', shell=True)
-    ip_addresses_string = ip_addresses.decode("utf-8")
-    ip_addresses = ip_addresses_string.split()
-    return ip_addresses
-
-
-def url_parser(ports, ip_addresses):
-    count = 0
-    url_array = []
-    global port_array
-    port_array = []
-    for ip in ip_addresses:
-        port = ports[count]
-        port_array.append(port)
-        count += 1
-        if port == 443:
-            url = 'https://' + ip + ':' + str(port)
-        else:
-            url = 'http://' + ip + ':' + str(port)
-        url_array.append(url)
-    return url_array
 
 
 def main():

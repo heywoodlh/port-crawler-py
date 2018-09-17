@@ -76,6 +76,14 @@ Set the scan to repeat itself on a regular basis -- at 1:00 a.m. every day -- wi
 ```
 
 
+### Map the timestamp field to a date (in order for the daily statistics to be visualized): 
+
+`curl -H 'Content-Type: application/json' -XPUT 'localhost:9200/_template/**templatename**' -d '{"template": "portscans*", "mappings": {"scan": {"properties":{"timestamp": {"type" : "date", "format" : "epoch_second"} } } } }'`
+
+
+*Note: running the above command to map the 'timestamp' field to a date will result in conflicts of fields. In order to resolve this, you will have to delete any scans that ran prior to running the command.
+
+
 ## Configuring Kibana:
 
 ### Access Kibana:
@@ -97,11 +105,3 @@ If you used an index prefix of 'portscans' in `port-crawler.py` (or didn't set a
 In this repository is a copy of a default Kibana dashboard called `kibana-export.json` and visualizations that can be used to visualize the results of `port-crawler.py`'s `masscan` results.
 
 In order to import it go to Management > Saved Objects > Import. Download `kibana-export.json` to the machine that you are accessing the Kibana interface from and select `kibana-export.json` to import the dashboard and visualizations.
-
-
-### Map the timestamp field to a date (in order for the daily statistics to be visualized): 
-
-`curl -H 'Content-Type: application/json' -XPUT 'localhost:9200/_template/**templatename**' -d '{"template": "portscans*", "mappings": {"scan": {"properties":{"timestamp": {"type" : "date", "format" : "epoch_second"} } } } }'`
-
-
-*Note: running the above command to map the 'timestamp' field to a date will result in conflicts of fields. In order to resolve this, you will have to delete any scans that ran prior to running the command.
