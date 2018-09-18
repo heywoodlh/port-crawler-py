@@ -4,11 +4,11 @@
 
 
 
-## Quick Installation on Ubuntu:
+## Quick Installation on Ubuntu, CentOS/RHEL:
 
 ### Run the install.sh script automatically:
 
-The `install.sh` script has been provided to simplify installing dependencies.
+The `install.sh` script has been provided to simplify installing dependencies. It installs Masscan, Elasticsearch and Kibana, does minimal configuration of ES + Kibana and starts them
 
 `curl https://raw.githubusercontent.com/heywoodlh/Port-Crawler-Py/master/install.sh | bash`
 
@@ -51,7 +51,7 @@ All of the `*_bin` arguments can be bypassed if you used the `install.sh` script
 Example command (change the IP addresses and the ports if you'd like):
 
 ```
-sudo /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001  --index_prefix portscans
+sudo /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001 --index_prefix portscans
 ```
 
 
