@@ -20,12 +20,14 @@ fi
 
 if [[ "$DEBIAN" == 'True' ]]
 then	
-	
+	sudo apt-get update
+	sudo apt-get install openjdk-8-jdk -y
+
 	wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 	echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-6.x.list
 	
 	sudo apt-get update
-	sudo apt-get install python3 python3-pip git gcc make clang libpcap-dev openjdk-8-jdk kibana elasticsearch -y
+	sudo apt-get install python3 python3-pip git gcc make clang libpcap-dev kibana elasticsearch -y
 
 fi
 
