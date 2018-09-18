@@ -15,6 +15,9 @@ git clone https://github.com/heywoodlh/Port-Crawler-Py /opt/Port-Crawler-Py
 if [[ -f /etc/debian_version ]]
 then
 	DEBIAN='True'
+elif [[ -f /etc/redhat-release ]]
+then
+	RHEL='True'
 fi
 
 
@@ -29,6 +32,24 @@ then
 	sudo apt-get update
 	sudo apt-get install python3 python3-pip git gcc make clang libpcap-dev kibana elasticsearch -y
 
+fi
+
+if [[ "$RHEL" == 'True' ]]
+then
+	sudo yum -y install java-1.8.0-openjdk
+
+	sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+	sudo curl 'https://raw.githubusercontent.com/heywoodlh/Port-Crawler-Py/master/rhel-repo/elastic.repo' -o '/etc/yum.repos.d/elastic.repo'
+	sudo yum -y install kibana elasticsearch
+
+	sudo yum -y install epel-release
+	sudo yum -y install python36
+	sudo ln -s /usr/bin/python3.6 /usr/bin/python3
+	curl https://bootstrap.pypa.io/get-pip.py -o ~/get-pip.py 
+	sudo /usr/bin/python3.6 ~/get-pip.py
+	rm ~/get-pip.py
+
+	sudo yum -y install git gcc gcc-c++ kernel-devel clang libpcap-devel
 fi
 
 
