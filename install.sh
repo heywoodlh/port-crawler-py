@@ -77,8 +77,12 @@ sudo cp bin/masscan /usr/bin/
 
 
 sudo chown -R "$USER":"$USER" /opt/Port-Crawler-Py
-sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
 
+if [[ "$DEBIAN" == 'True' ]]
+	sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
+elif [[ "$RHEL" == 'True' ]]
+	sudo /usr/local/bin/pip3.6 -r /opt/Port-Crawler-Py/requirements.txt
+fi
 
 ### Set default mapping for portscans to date
 
