@@ -61,6 +61,22 @@ sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
 
 
 ### Set default mapping for portscans to date
-curl -H 'Content-Type: application/json' -XPUT 'localhost:9200/_template/**templatename**' -d '{"template": "portscans*", "mappings": {"scan": {"properties":{"timestamp": {"type" : "date", "format" : "epoch_second"} } } } }'
 
-cd "$PWD"
+ERR=1
+MAX_TRIES=4 
+COUNT=0
+
+echo 'Please wait while attempting to connect to Elasticsearch...'
+while [  "$COUNT" -lt "$MAX_TRIES" ]
+do
+	curl -H 'Content-Type: application/json' -XPUT 'localhost:9200/_template/**templatename**' -d '{"template": "portscans*", "mappings": {"scan": {"properties":{"timestamp": {"type" : "date", "format" : "epoch_second"} } } } }'
+	sleep 10
+	if [ "$?" -eq 0 ]
+	then
+		cd "$PWD"
+		exit 0
+	fi
+	COUNT=$(("${COUNT}"+1))
+done
+echo "Unable to connect to Elasticsearch"
+exit "$ERR"
