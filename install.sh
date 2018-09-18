@@ -87,7 +87,7 @@ then
 	sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
 elif [[ "$RHEL" == 'True' ]]
 then
-	sudo /usr/local/bin/pip3.6 -r /opt/Port-Crawler-Py/requirements.txt
+	sudo /usr/local/bin/pip3.6 install -r /opt/Port-Crawler-Py/requirements.txt
 fi
 
 ### Set default mapping for portscans to date
