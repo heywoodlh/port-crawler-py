@@ -4,14 +4,6 @@
 IP_OR_HOSTNAME='0.0.0.0'
 
 
-
-### Don't edit below unless you know what you are doing
-
-PWD="$(pwd)"
-sudo mkdir -p /opt/
-sudo chown -R "$USER:$USER" /opt
-git clone https://github.com/heywoodlh/Port-Crawler-Py /opt/Port-Crawler-Py
-
 if [[ -f /etc/debian_version ]]
 then
 	DEBIAN='True'
@@ -51,6 +43,13 @@ then
 
 	sudo yum -y install git gcc gcc-c++ kernel-devel clang libpcap-devel
 fi
+
+### Don't edit below unless you know what you are doing
+
+PWD="$(pwd)"
+sudo mkdir -p /opt/
+sudo chown -R "$USER:$USER" /opt
+git clone https://github.com/heywoodlh/Port-Crawler-Py /opt/Port-Crawler-Py
 
 
 sudo sed -i 's/#cluster.name: my-application/cluster.name: port-crawler/g' /etc/elasticsearch/elasticsearch.yml
