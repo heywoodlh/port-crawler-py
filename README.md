@@ -10,7 +10,7 @@
 
 The `install.sh` script has been provided to simplify installing dependencies.
 
-`curl https://raw.githubusercontent.com/heywoodlh/Port-Crawler-Py/master/install.sh | sudo bash`
+`sudo curl https://raw.githubusercontent.com/heywoodlh/Port-Crawler-Py/master/install.sh | sudo bash`
 
 *Note: Please make sure that before running this script that you read the install script to make sure it doesn't do anything nefarious or that it won't impact your current system negatively. You solely are responsible for securityand well-being of your device. If you are not sure, refer to the manual installation section.*
 
