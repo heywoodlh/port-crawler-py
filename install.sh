@@ -70,6 +70,10 @@ sudo systemctl restart kibana.service
 sudo chown -R "$USER:$USER" /opt
 cd /opt
 git clone https://github.com/robertdavidgraham/masscan
+if [[ "$RHEL" == 'True' ]]
+then
+	sed -i -- 's/CC=clang/CC=gcc/g' /opt/masscan/Makefile
+fi
 cd masscan
 make
 sudo cp bin/masscan /usr/bin/
@@ -79,8 +83,10 @@ sudo cp bin/masscan /usr/bin/
 sudo chown -R "$USER":"$USER" /opt/Port-Crawler-Py
 
 if [[ "$DEBIAN" == 'True' ]]
+then
 	sudo pip3 install -r /opt/Port-Crawler-Py/requirements.txt
 elif [[ "$RHEL" == 'True' ]]
+then
 	sudo /usr/local/bin/pip3.6 -r /opt/Port-Crawler-Py/requirements.txt
 fi
 
