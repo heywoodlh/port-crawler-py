@@ -10,7 +10,7 @@ IP_OR_HOSTNAME='0.0.0.0'
 PWD="$(pwd)"
 sudo mkdir -p /opt/
 sudo chown -R "$USER:$USER" /opt
-git clone https://github.com/heywoodlh/Port-Crawler-Py
+git clone https://github.com/heywoodlh/Port-Crawler-Py /opt/Port-Crawler-Py
 cd Port-Crawler-Py
 
 
