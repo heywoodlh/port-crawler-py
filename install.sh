@@ -4,10 +4,10 @@
 IP_OR_HOSTNAME='0.0.0.0'
 
 
-if [[ -f /etc/debian_version ]]
+if [ -f /etc/debian_version ]
 then
 	DEBIAN='True'
-elif [[ -f /etc/redhat-release ]]
+elif [ -f /etc/redhat-release ]
 then
 	RHEL='True'
 fi
