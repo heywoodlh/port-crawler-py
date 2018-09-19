@@ -22,43 +22,44 @@ Help message:
 
 
 ```
-usage: port-crawler.py [-h] [--masscan_rate MASSCAN_RATE]
-                       [--masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]] --ip
-                       IP [IP ...] -p PORTS [PORTS ...] [-i INDEX_PREFIX]
-                       [--test]
+❯ /opt/Port-Crawler-Py/port-crawler.py --help
+usage: port-crawler.py [-h] [-c CONFIG] [--ip IP [IP ...]] [-r RATE]
+                       [-p PORTS [PORTS ...]] [-i INDEX_PREFIX] [--test]
 
 Port crawling script
 
 optional arguments:
   -h, --help            show this help message and exit
-  --masscan_rate MASSCAN_RATE
-                        masscan rate
-  --masscan_args MASSCAN_ARGS [MASSCAN_ARGS ...]
-                        additional masscan args
+  -c CONFIG, --config CONFIG
+                        masscan config file
   --ip IP [IP ...]      IP(s) to scan
+  -r RATE, --rate RATE  masscan rate
   -p PORTS [PORTS ...], --ports PORTS [PORTS ...]
                         Port(s) to scan
   -i INDEX_PREFIX, --index_prefix INDEX_PREFIX
                         Prefix of index
   --test                do not upload for testing
-
 ```
 
 
-All of the `*_bin` arguments can be bypassed if you used the `install.sh` script.
-
-
-Example command (change the IP addresses and the ports if you'd like):
+Edit the config file at `/opt/Port-Crawler-Py/masscan.conf` to reflect the configuration parameters you'd like `masscan` to use (IP addresses, ports, etc). Run `port-crawler.py` using the config file:
 
 ```
-sudo /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001 --index_prefix portscans
+sudo /opt/Port-Crawler-Py/port-crawler.py --config /opt/Port-Crawler-Py/masscan.conf --index_prefix portscans
+```
+
+
+Example command not using a config file:
+
+```
+sudo /opt/Port-Crawler-Py/port-crawler.py --rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001 --index_prefix portscans
 ```
 
 
 Set the scan to repeat itself on a regular basis -- at 1:00 a.m. every day -- with a cronjob (`sudo crontab -e`), changing the IP addresses and ports as you'd like:
 
 ```
-0 1 * * * /opt/Port-Crawler-Py/port-crawler.py --masscan_rate 1000 --ip 192.168.0.1 192.168.0.10 192.168.2.0/24 --ports 0-1024 3389 4786 3306 5432 1433 8080 11211 7001  --index_prefix portscans
+0 1 * * * /opt/Port-Crawler-Py/port-crawler.py --config /opt/Port-Crawler-Py/masscan.conf --index_prefix portscans
 ```
 
 
