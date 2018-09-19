@@ -10,10 +10,10 @@ from elasticsearch import Elasticsearch
 
 
 parser = argparse.ArgumentParser(description="Port crawling script")
-parser.add_argument('--masscan_rate', help='masscan rate', default='1000')
-parser.add_argument('--masscan_args', help='additional masscan args', nargs='+')
-parser.add_argument('--ip', help='IP(s) to scan', nargs='+', required='True')
-parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+', required='True')
+parser.add_argument('-r', '--rate', help='masscan rate')
+parser.add_argument('-c', '--config', help='masscan config file')
+parser.add_argument('--ip', help='IP(s) to scan', nargs='+')
+parser.add_argument('-p', '--ports', help='Port(s) to scan', nargs='+')
 parser.add_argument('-i', '--index_prefix', help='Prefix of index', default='portscan')
 parser.add_argument('--test', help='do not upload for testing', action="store_true")
 
@@ -35,18 +35,19 @@ def es_uploader(date, complete_file, es, index_prefix):
     f.closed
 
 
-def scanner(ip, ports, masscan_rate, masscan_args):
-    ip = ','.join(ip)
-    ports = ','.join(ports)
-    if masscan_args:
-        masscan_args = ' '.join(masscan_args)
-        subprocess.run(['masscan', str(ip),'-p', str(ports), '--rate', str(masscan_rate), '--banners', '-oJ', complete_file, masscan_args])
+def scanner(ip, ports, masscan_rate, masscan_config):
+    if masscan_config:
+        subprocess.run(['masscan', '-c', masscan_config, '-oJ', complete_file])
     else:
+        if not ip:
+            print('"--ip" argument required')
+            sys.exit(1)
+        if not ports:
+            print('"--ports" argument required')
+            sys.exit(1)
+        ip = ','.join(ip)
+        ports = ','.join(ports)
         subprocess.run(['masscan', str(ip),'-p', str(ports), '--rate', str(masscan_rate), '--banners', '-oJ', complete_file])
-    #subprocess.run(['sed', '''1d; $d''', str(complete_file), '>', str(date)])
-    #subprocess.run(['sed', '''s/.$//''', str(date), '>', str(complete_file)])
-    #subprocess.run(['sed', '-i', '''/^$/d''', str(complete_file)])
-    #subprocess.run(['sed', '-i', '''s/$/ }/''', str(complete_file)]) 
     try:
         os.remove(date)
     except FileNotFoundError:
@@ -60,7 +61,9 @@ def main():
     global complete_file
     complete_file = date + ext
     elasticsearch_host = Elasticsearch()
-    scanner(args.ip, args.ports, args.masscan_rate, args.masscan_args)
+    masscan_rate = args.rate
+    masscan_config = args.config
+    scanner(args.ip, args.ports, masscan_rate, masscan_config)
     if not args.test:
         es_uploader(date, complete_file, elasticsearch_host, args.index_prefix)
     if not args.test:
